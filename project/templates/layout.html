@@ -1,0 +1,33 @@
+<html>
+<head>
+  <link rel="stylesheet" href="static/css/homePage.css">
+  <link rel="stylesheet" href="static/css/submitReviewPage.css">
+  <link rel="stylesheet" href="static/css/style.css">
+
+  
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+ 
+  
+  
+</head>
+
+<body>
+
+<div class="topnav">
+  <a class="active" href="/">Home</a>
+  <a href="/mapPage">Map</a>
+  <a href="/submitReviewPage">Submit Review</a>
+  {% if 'username' in session %} 
+  <a  href="/adminPage">Manage Internship</a>
+  <a href="{{url_for('logout')}}">Logout</a>
+  {% endif %}
+</div>
+{% block content %}{% endblock %}
+
+{% if 'username' in session %} 
+Welcome back {{session_user_name}}
+ {% endif %}
+
+</body>
+
+</html>

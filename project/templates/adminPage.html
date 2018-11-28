@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<input id="address" type="text" placeholder="Enter address here" />
+    <button id="btn">Add Pin</button>
+    
+    
+    <script type="text/javascript" src="">
+        function getLatitudeLongitude(callback, address) {
+    // If adress is not supplied, use default value 'Ferrol, Galicia, Spain'
+    address = address || 'Ferrol, Galicia, Spain';
+    // Initialize the Geocoder
+    geocoder = new google.maps.Geocoder();
+    if (geocoder) {
+        geocoder.geocode({
+            'address': address
+        }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                callback(results[0]);
+            }
+        });
+    }
+}
+
+var button = document.getElementById('btn');
+
+button.addEventListener("click", function () {
+    var address = document.getElementById('address').value;
+    getLatitudeLongitude(showResult, address)
+});
+        
+    </script>>
+<!--
+<h1>Hello Admin!</h1>
+<p1>Search reviews to publish, trash, or edit!</p1>
+
+<form action="getReviewInfo" method="post">
+
+Search by: <br><br>
+Email of Student: <input type="text" name="Email" /><br><br>
+or <br>
+Name of the Internship/Company: <input type="text" name="cname" /><br><br>
+or <br>
+Name of Student: <input type="text" name="sname" /><br><br>
+<input type="submit" />
+
+</form> -->
+
+{% endblock %}
+

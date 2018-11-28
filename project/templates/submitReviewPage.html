@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+
+<div name = "back">
+	<br>
+	<p name = "info" class="center"> Share information about your internship!</p>
+	<br>
+	<form action="{{url_for('submitReviewPage')}}" method="post" class = "center">
+		<p name = "formLabel"> PERSONAL INFORMATION </p>
+			<br>
+				<label for="fname">First Name: </label>
+				<input  type="text" name="fname" />
+			<br>
+			<br>
+				<label for="lname">Last Name: </label>
+				<input  type="text" name="lname"/>
+			<br>
+			<br>
+			<label for="email">Email: </label>
+			<input name="email"  type="text" /><br>
+			<br>
+				Do you give consent to show your name on the wesbite?<br>
+				<label for="yes">Yes</label>
+				<input id="yname" type="radio" name="yname"  value="yes"><br>
+				<label for="no">No</label>
+	  			<input id="nname" type="radio" name="yname"  value="no">
+  			<br>
+  			<br>
+				Do you give consent to show your email on the wesbite?<br>
+				<label for="yes">Yes</label>
+				<input id="nemail"type="radio" name="nemail"  value="yes"><br>
+				<label for="no">No</label>
+	  			<input id="yemail" type="radio" name="nemail"  value="no">
+  			<br>
+			<br>
+
+		<p name = "formLabel"> INTERNSHIP INFORMATION </p>
+			<br>
+			Select Ineternship:
+			<select name= "option">
+				{% for result in res %}
+  <option  value="{{result['id']}}">{{result['title']}}</option>
+  {% endfor %}
+</select><br><br>
+				
+		<p name = "formLabel"> INTERNSHIP REVIEW </p>
+			<br>
+			What did you like about your internship? <br>
+			<textarea name="q3" rows="4" cols="50" class = "center"> </textarea>
+			<br>
+			<br>
+			What was the environment at your internship like? <br>
+			<textarea name="q4" rows="4" cols="50" class = "center"> </textarea>
+			<br>
+			<br>
+			Are there any prerequistes for this internship?<br> If yes, what are they? <br>
+			<textarea name="q5" rows="4" cols="50" class = "center"> </textarea>
+			<br>
+			<br>
+			What valuable skills did you gain from working here? <br>
+			<textarea name="q6" rows="4" cols="50" class = "center"> </textarea>
+			<br>
+			<br>
+		<input type="submit" class = "center" />
+		<br>
+	</form>
+	<br>
+</div> 
+
+{% endblock %}
+
