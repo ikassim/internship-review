@@ -10,7 +10,7 @@ lastname text,
 email text 
 );
 
-create table inernships(
+create table internships(
 id serial NOT NULL PRIMARY KEY,
 title text,
 address text,

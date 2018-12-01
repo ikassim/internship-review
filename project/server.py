@@ -111,10 +111,58 @@ def adminPage():
     conn=connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if 'username' in session:
-        query = "select * from users WHERE username = '%s'" % (session['username'])
+        
+        if request.method=='POST':
+            if('publish' in request.form ):
+             selected_reviews = request.form.getlist("selectedReviews")
+             for i in selected_reviews:
+                query = "UPDATE reviews SET status = 1 WHERE id = '%s'" % (i) 
+                cur.execute(query)
+                conn.commit()
+                print (i)
+            if('delete' in request.form ):
+             selected_reviews = request.form.getlist("selectedReviews")
+             for i in selected_reviews:
+                query = "DELETE FROM reviews WHERE id = '%s'" % (i) 
+                cur.execute(query)
+                conn.commit()
+                print (i)
+            if('add' in request.form ):
+                
+                title = request.form['title']
+                address=request.form['address']
+                description=request.form['description']
+             
+                query = "INSERT INTO inernships VALUES (default, '%s', '%s', '%s')" % (title,address,description) 
+                try:
+                    cur.execute(query)
+                except psycopg2.DatabaseError, e:
+                    print 'Error %s' % e 
+                #print ("INSERT INTO users VALUES (default,'%s','%s',%s);"%(request.form['username'],passw,request.form['zipcode']), )
+                conn.commit()
+            
+            if('deleteInt' in request.form ):
+             selected_internships = request.form.getlist("selectedInternships")
+             for i in selected_internships:
+                query = "DELETE FROM reviews WHERE inernship_id = '%s'" % (i) 
+                cur.execute(query)
+                conn.commit()
+                query = "DELETE FROM inernships WHERE id = '%s'" % (i) 
+                cur.execute(query)
+                conn.commit()
+                
+            
+                
+        #return redirect(url_for('adminPage',res=st))
+        query = "select * from reviews ORDER BY id"
         cur.execute(query)
         res=cur.fetchall()
-        return render_template('adminPage.html',res=res)
+        
+        query = "select * from inernships ORDER BY id"
+        cur.execute(query)
+        internshipsList=cur.fetchall()
+        
+        return render_template('adminPage.html',res=res,internshipsList=internshipsList)
     return render_template('adminPage.html')    
 
 
