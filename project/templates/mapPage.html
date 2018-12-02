@@ -2,30 +2,61 @@
 
 {% block content %}
 
+<h1>Internship Map</h1>
+<div class="center">
 
 
+<div class="row">
+
+  <div class="column">
+  
+  
+  <ul>
+    {% for result in res %}
+    <li>
+      <img src="https://i0.wp.com/cdnb.c3dt.com/icon/776313-bajclub.apps.android.nippakistan.png" >
+      <h3>{{result['title']}}</h3>
+      <p>
+        Address: {{result['address']}} </br>
+        Description: {{result['description']}}
+      </p>
+      <p><b><a id="myBtn" target="_blank">Add Review</a></b></p>
+      
+    </li>
+    {% endfor %}
+  </ul>
+  
+  
+  </div>
+  
 
 
-<br>
-<h1>INTERNSHIP MAP</h1>
-<br>
-<div name = "back">
-	<br>
-	<div id="map" class="center" style="width:400px;height:400px;background:yellow"></div>
+<div  class="column" id="map"   style="width:600px;height:600px;"></div>
+</div>
 
-	<script>
-function myMap() {
-var locations = [
-      ['Bondi Beach', -33.890542, 151.274856, 4],
-      ['Coogee Beach', -33.923036, 151.259052, 5],
-      ['Cronulla Beach', -34.028249, 151.157507, 3],
-      ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-      ['Maroubra Beach', -33.950198, 151.259302, 1]
-    ];
+
+</div>
+
+
+<script>
+var listLocation=[];
+function myMap(l) {
+  
+  //alert("address "+ l)
+  //var l;
+  //for (l in listLocation){
+var locations = l;//[[adr,l1,l2]];
+//}
+     // ['Bondi Beach', -33.890542, 151.274856, 4],
+     // ['Coogee Beach', -33.923036, 151.259052, 5],
+      //['Cronulla Beach', -34.028249, 151.157507, 3],
+      //['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+      //['Maroubra Beach', 38.340389,-77.433420, 1]
+    //];
 
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
-      center: new google.maps.LatLng(-33.92, 151.25),
+      zoom: 3,
+      center: new google.maps.LatLng(29.5, -80.35),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -47,41 +78,64 @@ var locations = [
       })(marker, i));
     }
 }
+
+
+
+function showResultR(result,address) {
+   //var address = document.getElementById('adr').value;
+   var ad=[address,result.geometry.location.lat(),result.geometry.location.lng()];
+   //alert(result.geometry.location.lat()+"\n" +result.geometry.location.lng())
+   
+   listLocation.push(ad);
+   myMap(listLocation);
+  // alert("testing" + listLocation);
+   
+    //
+     //alert(address+" "+result.geometry.location.lat()+"\n" +result.geometry.location.lng())
+   
+}
+        function getLatitudeLongitude(callback, address) {
+    // If adress is not supplied, use default value 'Ferrol, Galicia, Spain'
+    address = address || 'Ferrol, Galicia, Spain';
+    // Initialize the Geocoder
+    geocoder = new google.maps.Geocoder();
+    if (geocoder) {
+        geocoder.geocode({
+            'address': address
+        }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                callback(results[0],address);
+            }
+        });
+    }
+     
+}
+
+function getMyaddressR(res) {
+   //alert("hey")
+   var i
+   var n=0
+   //for  (i in '{{res}}'){
+   '{% for result in res %}'
+     n++;
+     //alert("hey "+"{{result['address']}}")
+      var address = "{{result['address']}}";
+      getLatitudeLongitude(showResultR, address);
+      //alert("testing" + this.listLocation);
+    '{% endfor %}'
+  // }
+  //alert("testing" + listLocation);
+  
+};
+
 </script>
 
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtWwDHymqgW3MIMhS0doQ0kcHHvRKjsf0&callback=myMap"></script>
-	
-	<div>
-  
-  
-  
-  <ul>
-    {% for result in res %}
-    <li>
-      <img src="https://i0.wp.com/cdnb.c3dt.com/icon/776313-bajclub.apps.android.nippakistan.png" >
-      <h3>{{result['title']}}</h3>
-      <p>
-        Address: {{result['address']}} </br>
-        Description: {{result['description']}}
-      </p>
-      <p><b><a id="myBtn" target="_blank">Add Review</a></b></p>
-      
-    </li>
-    {% endfor %}
-  </ul>
 
-        
-  
-</div>
-	<!--
-	UNABLE TO ACTUALLY LOAD THE MAP WITHOUT GETTING AN API KEY FROM GOOGLE WHICH COSTS MONEY SOMETIMES AND NEED TO TALK TO THE CLIENT
-	-->
-	<br>
-</div>
+     
 
-
-
-
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtWwDHymqgW3MIMhS0doQ0kcHHvRKjsf0&callback=getMyaddressR"></script>
+<!--
+UNABLE TO ACTUALLY LOAD THE MAP WITHOUT GETTING AN API KEY FROM GOOGLE WHICH COSTS MONEY SOMETIMES AND NEED TO TALK TO THE CLIENT
+-->
 
 {% endblock %}

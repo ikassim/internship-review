@@ -1,15 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div name = "back">
 	<div class="container">
 		<div class="top">
 			<h1 id="title" class="hidden"><span id="logo"> <span></span></span></h1>
 		</div>
 		<div class="login-box animated fadeInUp">
 			<div class="box-header">
-				<h2>Log In</h2>
+				<h1 >LOGIN</h1>
+				
 			</div><br>
-			<img src="static/images/belltower.jpg" alt="belltower" class="smallcenter">
+			<img src="static/images/belltower.jpg" alt="belltower" class = "center">
 			<br>
 			<p1 class="center"> This is the login page for the Administrator. <br> A student does not need to login to submit a review </p1> <br> <br>
 			<form method="post" action="/login">
@@ -29,4 +31,5 @@
 			<a href="#"><p class="small">Forgot your password?</p></a>
 		</div>
 	</div>
+</div>
 {% endblock %}

@@ -1,12 +1,155 @@
 {% extends "layout.html" %}
 
-{% block content %}
 
-<input id="address" type="text" placeholder="Enter address here" />
-    <button id="btn">Add Pin</button>
+
+
+
+
+{% block content %}
+<div name = "back">
+	<!-- Tab links -->
+<div class="tab">
+  <button id="defaultOpen" class="tablinks" onclick="openCity(event, 'London')">Reviews Setting</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Add Internship</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Delete Reviews</button>
+</div>
+
+
+
+<div name = "back">
+<div id="London" class="tabcontent">
+  <script>
+function myFunction() {
+  //  location.reload();
+}
+</script>
+
+
+<script>
+
+function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+</script>
+
+
+<script type="text/javascript" src="">
+function editReview(e){ 
+    console.log('tr clicked ')
+}
+</script>
+
+	<form name="RegForm"  onsubmit="return Validateform()" action="{{url_for('adminPage')}}" method="post" class = "center">
+
+<table id="customers">
+  <tr >
+    <th>Reviewer</th>
+    <th>Email</th>
+    <th>Review</th>
+    <th>Name Consent</th>
+    <th>Email Consent</th>
+    <th>Status</th>
+
+  </tr>
+  {% for result in res %}
+  <tr id="{{result['id']}}" ondblclick="editReview({{result['id']}});" >
+    <td>{{result['reviewer']}}</td>
+    <td>{{result['email']}}</td>
+    <td contenteditable='true'>{{result['q1']}} {{result['q2']}} {{result['q3']}} {{result['q4']}}  </td>
+    <td>{{result['q5']}}</td>
+    <td>{{result['q6']}}</td>
+    <!--<td>{{result['status']}}</td>-->
+    
+    {% if 0 == result['status']  %} 
+    <td><font color="red">Not Published</font></td>
+    {% endif %}
+    {% if 1 == result['status'] %} 
+    <td><font color="green">Published</font></td>
+    {% endif %}
     
     
-    <script type="text/javascript" src="">
+    <td><input type="checkbox" value="{{result['id']}}" name ="selectedReviews" /></td>
+    
+  </tr>
+  
+  {% endfor %}
+</table>
+ <input  type="submit" name="delete"  value="Delete" />   <!--<input  type="submit" value="Edit" /> --><input  type="submit"  name="publish" value="Publish" /> 
+</form>
+
+
+
+
+
+
+</div>
+
+
+
+
+<div id="Paris" class="tabcontent">
+    
+    
+    <div class="container">
+  <div style="text-align:center">
+    <h2>Adding Internship</h2>
+    
+  </div>
+  <div class="row">
+    <div class="column">
+      <div id="map" class="center" style="width:400px;height:400px;"></div>
+
+<script>
+
+function myMap(adr,l1,l2) {
+  
+var locations = [[adr,l1,l2]];
+//alert("we here");
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(l1,l2),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+    
+}
+
+
+
+ function showResult(result) {
+   var address = document.getElementById('adr').value;
+    myMap(address,result.geometry.location.lat(),result.geometry.location.lng());
+     //alert(address+" "+result.geometry.location.lat()+"\n" +result.geometry.location.lng())
+   
+}
         function getLatitudeLongitude(callback, address) {
     // If adress is not supplied, use default value 'Ferrol, Galicia, Spain'
     address = address || 'Ferrol, Galicia, Spain';
@@ -21,16 +164,100 @@
             }
         });
     }
+     
 }
 
-var button = document.getElementById('btn');
+function getMyaddress() {
+   //alert("hey")
+    var address = document.getElementById('adr').value;
+    getLatitudeLongitude(showResult, address);
+};
+</script>
 
-button.addEventListener("click", function () {
-    var address = document.getElementById('address').value;
-    getLatitudeLongitude(showResult, address)
-});
+
+    
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtWwDHymqgW3MIMhS0doQ0kcHHvRKjsf0&callback=myMap"></script>
+    </div>
+    <div class="column">
+      
+      
+      
+      <form action="{{url_for('adminPage')}}" method="post">
         
-    </script>>
+          <div class="col-50">
+            
+            <label for="fname"><i class="fa fa-user"></i><font color="black"> Internship Title</font></label><br>
+            <input type="text"   id="fname" name="title" placeholder="Title"><br>
+            <label for="adr"><i class="fa fa-address-card-o"></i><font color="black"> Address,City,State,zipcode</font></label><br>
+            <input type="text" id="adr" onchange="getMyaddress()" name="address" placeholder="542 W. 15th Street"><br>
+            <label for="description"><i class="fa fa-address-card-o"></i><font color="black"> Description</font></label><br>
+            <textarea  id="dis" name="description" placeholder="information about the Internship"></textarea><br>
+          </div>
+        <input type="submit" name="add" value="Add Internship">
+      </form>
+    </div>
+  </div>
+</div>
+    
+    
+</div>
+
+
+
+<script type="text/javascript" src="">
+   
+
+
+
+ 
+        
+    </script>
+
+<div id="Tokyo" class="tabcontent">
+  
+  
+  
+  <form name="RegForm"  onsubmit="return Validateform()" action="{{url_for('adminPage')}}" method="post" class = "center">
+
+<table id="customers">
+  <tr >
+    <th>Title</th>
+    <th>Address</th>
+    <th>Description</th>
+
+  </tr>
+  {% for result in internshipsList %}
+  <tr id="{{result['id']}}" ondblclick="editReview({{result['id']}});" >
+    <td contenteditable='true'>{{result['title']}} </td>
+    <td contenteditable='true'>{{result['address']}} </td>
+    <td contenteditable='true'>{{result['description']}} </td>
+    <!--<td>{{result['status']}}</td>-->
+    
+
+    
+    
+    <td><input type="checkbox" value="{{result['id']}}" name ="selectedInternships" /></td>
+    
+  </tr>
+  
+  {% endfor %}
+</table>
+ <input  type="submit" name="deleteInt"  value="Delete" /><input  type="submit" name="saveChanges"  value="Save Changes" />
+</form>
+  
+  
+  
+  
+</div>
+
+
+</div>
+    
+</div> 
+
+
+
 <!--
 <h1>Hello Admin!</h1>
 <p1>Search reviews to publish, trash, or edit!</p1>

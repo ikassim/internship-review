@@ -1,74 +1,174 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<script>
+  
+  function Validateform()
+{
+	var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	 //var t1 = form.document.getElementsByName("yname");
+	 //var t2 = form.document.getElementsByName("nemail");
+	 var fname = document.forms["RegForm"]["fname"]; 
+	 var lname = document.forms["RegForm"]["lname"]; 
 
+	if(!mailformat.test(document.getElementById('email').value))
+	{
+		
+	
+		
+			alert("You have entered an invalid email address!");
+			document.getElementById('email').focus();
+			return false;
+		
+	}
+	
+	if(!(document.getElementById('email').value.match("mail.umw.edu$")) || !(document.getElementById('email').value.match("umw.edu$")))
+		{
+			alert("This is not a UMW email!");
+			document.getElementById('email').focus();
+			return false;
+		}
+	
+	 if(fname.value=="")
+	{
+		alert("You have entered an invalid First name!");
+		fname.focus();
+		return false;
+	}
+	 if(lname.value=="")
+	{
+		alert("You have entered an invalid Last name!");
+		lname.focus();
+		return false;
+	}
+	 if((document.getElementById('checknamey').checked == false)&& (document.getElementById('checknamen').checked == false))
+	{
+		alert("You have to answer this question\n \"Do you give consent to show your name on the wesbite?\"");
+		document.getElementById('checknamey').focus();
+		return false;
+	}
+	if((document.getElementById('emailchecky').checked == false)&& (document.getElementById('emailcheckn').checked == false))
+	{
+		alert("You have to answer this question\n \"Do you give consent to show your name on the wesbite?\"");
+		document.getElementById('emailchecky').focus();
+		return false;
+	}
+	if(document.getElementById('welcomeDiv').style.display == "block")	{
+		if((document.getElementById('internshipName').value == ""))
+		{
+			alert("Please enter the internship title");
+			document.getElementById('internshipName').focus();
+			return false;
+		}
+		if((document.getElementById('address').value == ""))
+		{
+			alert("Please enter the internship address");
+			document.getElementById('address').focus();
+			return false;
+		}
+	}
+	 
+}
+  
+</script>
 
 
 <div name = "back">
 	<br>
 	<p name = "info" class="center"> Share information about your internship!</p>
 	<br>
-	<form action="{{url_for('submitReviewPage')}}" method="post" class = "center">
+	<form name="RegForm"  onsubmit="return Validateform()" action="{{url_for('submitReviewPage')}}" method="post" class = "center">
 		<p name = "formLabel"> PERSONAL INFORMATION </p>
 			<br>
 				<label for="fname">First Name: </label>
-				<input  type="text" name="fname" />
+				<input id"fname" type="text" name="fname" />
 			<br>
 			<br>
-				<label for="lname">Last Name: </label>
-				<input  type="text" name="lname"/>
+				<label for="lname">Last Name: </label> 
+				<input id"lname" type="text" name="lname"/>
 			<br>
 			<br>
-			<label for="email">Email: </label>
-			<input name="email"  type="text" /><br>
+			<label for="email">Email: </label>&nbsp &nbsp &nbsp&nbsp
+			<input id="email" name="email"  type="text" /><br>
 			<br>
 				Do you give consent to show your name on the wesbite?<br>
 				<label for="yes">Yes</label>
-				<input id="yname" type="radio" name="yname"  value="yes"><br>
+				<input id="checknamey" type="radio" name="yname"  value="yes"><br>
 				<label for="no">No</label>
-	  			<input id="nname" type="radio" name="yname"  value="no">
+	  			<input id="checknamen" type="radio" name="yname"  value="no">
   			<br>
   			<br>
 				Do you give consent to show your email on the wesbite?<br>
 				<label for="yes">Yes</label>
-				<input id="nemail"type="radio" name="nemail"  value="yes"><br>
+				<input id="emailchecky"type="radio" name="nemail"  value="yes"><br>
 				<label for="no">No</label>
-	  			<input id="yemail" type="radio" name="nemail"  value="no">
+	  			<input id="emailcheckn" type="radio" name="nemail"  value="no">
   			<br>
 			<br>
 
 		<p name = "formLabel"> INTERNSHIP INFORMATION </p>
 			<br>
-			Select Ineternship:
-			<select name= "option">
+			Select Ineternship:<br>
+			<select onchange="showDiv(this)" name= "option" id= "option">
 				{% for result in res %}
   <option  value="{{result['id']}}">{{result['title']}}</option>
   {% endfor %}
+  <option  value="other">Other</option>
 </select><br><br>
+
+
+<div id="welcomeDiv"  style="display:none;"  > 
+
+Name of the Internship/Company: <input type="text" name="internshipName" id="internshipName"/><br><br>
+Address of Internship: <input type="text" name="address" id="address"/><br><br>
+
+</div>
+
+<script>
+	
+	function showDiv(e) {
+//		var option = document.getElementByName("option");
+		if (e.value == "other") {
+			document.getElementById('welcomeDiv').style.display = "block";
+			
+    //alert("Please select a card type");
+}
+else
+{
+	document.getElementById('welcomeDiv').style.display = "none";
+}
+
+   
+}
+</script>
+
 				
 		<p name = "formLabel"> INTERNSHIP REVIEW </p>
 			<br>
 			What did you like about your internship? <br>
-			<textarea name="q3" rows="4" cols="50" class = "center"> </textarea>
+			<textarea id"q3" name="q3" rows="4" cols="50" class = "center"> </textarea>
 			<br>
 			<br>
 			What was the environment at your internship like? <br>
-			<textarea name="q4" rows="4" cols="50" class = "center"> </textarea>
+			<textarea  id"q4" name="q4" rows="4" cols="50" class = "center"> </textarea>
 			<br>
 			<br>
 			Are there any prerequistes for this internship?<br> If yes, what are they? <br>
-			<textarea name="q5" rows="4" cols="50" class = "center"> </textarea>
+			<textarea  id"q5" name="q5" rows="4" cols="50" class = "center"> </textarea>
 			<br>
 			<br>
 			What valuable skills did you gain from working here? <br>
-			<textarea name="q6" rows="4" cols="50" class = "center"> </textarea>
+			<textarea id"q6"  name="q6" rows="4" cols="50" class = "center"> </textarea>
 			<br>
 			<br>
-		<input type="submit" class = "center" />
+		<input  type="submit"  />
 		<br>
 	</form>
 	<br>
 </div> 
+
+
+
 
 {% endblock %}
 
