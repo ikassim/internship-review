@@ -150,8 +150,10 @@ def adminPage():
                 query = "DELETE FROM inernships WHERE id = '%s'" % (i) 
                 cur.execute(query)
                 conn.commit()
-                
-            
+             if('saveChanges' in request.form ):
+                title = request.form['title']
+                address=request.form['address']
+                description=request.form['description']
                 
         #return redirect(url_for('adminPage',res=st))
         query = "select * from reviews ORDER BY id"
@@ -190,6 +192,26 @@ def submitReviewPage():
         q4=request.form['q4']
         q5=request.form['q5']
         q6=request.form['q6']
+
+        
+        if request.form['option']=="other":
+            title=request.form['internshipName']
+            address=request.form['address']
+            query = "INSERT INTO inernships VALUES (default, '%s', '%s', null)" % (title,address) 
+            try:
+                cur.execute(query)
+            except psycopg2.DatabaseError, e:
+                print 'Error %s' % e 
+                #print ("INSERT INTO users VALUES (default,'%s','%s',%s);"%(request.form['username'],passw,request.form['zipcode']), )
+            conn.commit()
+            #query = "SELECT currval(pg_get_serial_sequence('inernships','id'));"
+            query = "INSERT INTO reviews VALUES (default,'%s','null',0,'%s',SELECT currval(pg_get_serial_sequence('inernships','id')),'%s','%s','%s','%s','%s','%s')" % (name,email,q3,q4,q5,q6,q1,q2)
+                
+            
+        else:
+            inernship=request.form['option']
+
+
         query = "INSERT INTO reviews VALUES (default,'%s','null',0,'%s','%s','%s','%s','%s','%s','%s','%s')" % (name,email,inernship,q3,q4,q5,q6,q1,q2)
         try:
             cur.execute(query)
