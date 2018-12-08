@@ -11,7 +11,7 @@
 <div class="tab">
   <button id="defaultOpen" class="tablinks" onclick="openCity(event, 'London')">Reviews Setting</button>
   <button class="tablinks" onclick="openCity(event, 'Paris')">Add Internship</button>
-  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Delete Reviews</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Internship Setting</button>
 </div>
 
 
@@ -44,11 +44,36 @@ document.getElementById("defaultOpen").click();
 </script>
 
 
-<script type="text/javascript" src="">
-function editReview(e){ 
-    console.log('tr clicked ')
-}
 </script>
+
+
+
+function editReview(r){ 
+
+   var DispWin = window.open('','NewWin', 'toolbar=no,status=no,width=500,height=200')
+     var text=`<link rel="stylesheet" href="static/css/style.css"><form name="RegForm"  onsubmit="return Validateform()" action="{{url_for("adminPage")}}" method="post" class = "center">   
+	       
+
+	     <table id="customers">
+             <tr >
+	     <th>Title</th>
+	    <th>Address</th>
+	    <th>Description</th>	
+	    </tr>	    
+	    <tr >
+    {% for result in internshipsList %} `;
+  text+='{% if  result["id"]== '+r.toString()+'   %}'+`<td contenteditable='true'>{{result['title']}} </td>
+  <td contenteditable='true'>{{result['address'] }}</td>
+  <td contenteditable='true'>{{result['description']}} </td>
+    {% endif %}
+    {% endfor %}
+     </tr>
+    </table>
+     </form>`;  
+    DispWin.document.write(text);
+
+    </script>
+
 
 	<form name="RegForm"  onsubmit="return Validateform()" action="{{url_for('adminPage')}}" method="post" class = "center">
 
@@ -205,9 +230,20 @@ function getMyaddress() {
 
 
 
-<script type="text/javascript" src="">
-   
+<script >
+ function confirmChanges(whichPressed) {
+ if(whichPressed=="Delete")
+    {
+      var v = confirm("Are you sure you wnat to Delete this?");
+    }
+else
+      var v = confirm("Are you sure you wnat to save changes?");
+ if (!v){
+    
+    return false;
+   }
 
+}
 
 
  
@@ -218,7 +254,7 @@ function getMyaddress() {
   
   
   
-  <form name="RegForm"  onsubmit="return Validateform()" action="{{url_for('adminPage')}}" method="post" class = "center">
+  <form name="RegForm"  onsubmit="return confirmChanges(whichPressed)" action="{{url_for('adminPage')}}" method="post" class = "center">
 
 <table id="customers">
   <tr >
@@ -228,8 +264,9 @@ function getMyaddress() {
 
   </tr>
   {% for result in internshipsList %}
-  <tr id="{{result['id']}}" ondblclick="editReview({{result['id']}});" >
-    <td contenteditable='true'>{{result['title']}} </td>
+  <tr id="{{result['id']}}" id="{{result['id']}}" ondblclick="editReview({{result['id']}});" >
+	    <td >{{result['title']}} </td>
+  
     <td contenteditable='true'>{{result['address']}} </td>
     <td contenteditable='true'>{{result['description']}} </td>
     <!--<td>{{result['status']}}</td>-->
@@ -243,7 +280,7 @@ function getMyaddress() {
   
   {% endfor %}
 </table>
- <input  type="submit" name="deleteInt"  value="Delete" /><input  type="submit" name="saveChanges"  value="Save Changes" />
+<input  onclick="whichPressed=this.value" type="submit" name="deleteInt"  value="Delete" /><input  onclick="whichPressed=this.value" type="submit" name="saveChanges"  value="Save Changes" />
 </form>
   
   
